@@ -1,15 +1,16 @@
-//go:build integration
-// +build integration
-
 package main
 
 import (
 	"context"
-	"github.com/dougwatson/youtube"
+
+	"github.com/dougwatson/youtube/v2"
 )
 
 func main() {
 	ctx := context.Background()
+
+	downloader := NewDownloader()
+	youtube.RegisterDownloader(downloader)
 
 	video, err := downloader.testDownloader.Client.GetVideoContext(ctx, "BaW_jenozKc")
 
