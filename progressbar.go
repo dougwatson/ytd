@@ -1,4 +1,4 @@
-package progressbar
+package main
 
 import (
 	"errors"
@@ -343,7 +343,7 @@ func New(max int) *ProgressBar {
 // DefaultBytes provides a progressbar to measure byte
 // throughput with recommended defaults.
 // Set maxBytes to -1 to use as a spinner.
-func DefaultBytes(maxBytes int64, description ...string) *ProgressBar {
+func defaultBytes(maxBytes int64, description ...string) *ProgressBar {
 	desc := ""
 	if len(description) > 0 {
 		desc = description[0]

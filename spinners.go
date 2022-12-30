@@ -1,4 +1,4 @@
-package progressbar
+package main
 
 var spinners = map[int][]string{
 	0:  {"←", "↖", "↑", "↗", "→", "↘", "↓", "↙"},

@@ -10,7 +10,7 @@ import (
 	"regexp"
 
 	"github.com/dougwatson/youtube/v2"
-	"github.com/dougwatson/ytd/progressbar"
+
 )
 
 const defaultExtension = ".mov"
@@ -139,7 +139,7 @@ func (dl *Downloader) videoDLWorker(ctx context.Context, out *os.File, video *yo
 	if err != nil {
 		return err
 	}
-	bar := progressbar.DefaultBytes(
+	bar := defaultBytes(
 		size,
 		"downloading",
 	)
