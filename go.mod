@@ -3,7 +3,7 @@ module github.com/dougwatson/ytd
 go 1.19
 
 require (
-	github.com/dougwatson/youtube/v2 v2.7.24
+	github.com/dougwatson/youtube/v2 v2.7.25
 	github.com/schollz/progressbar/v3 v3.12.2
 )
 

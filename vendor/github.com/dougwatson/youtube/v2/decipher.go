@@ -9,11 +9,10 @@ import (
 	"net/url"
 	"regexp"
 	"strconv"
-
-	"github.com/dop251/goja"
 )
 
 func (c *Client) decipherURL(ctx context.Context, videoID string, cipher string) (string, error) {
+	println("decipherUR==============================================================")
 	params, err := url.ParseQuery(cipher)
 	if err != nil {
 		return "", err
@@ -131,21 +130,27 @@ func (config playerConfig) decodeNsig(encoded string) (string, error) {
 }
 
 func evalJavascript(jsFunction, arg string) (string, error) {
-	const myName = "myFunction"
+	println("evalJavascript in decipher.go--------------------------------------------", jsFunction, "arg=", arg)
+	return "", nil
+	/*
+		const myName = "myFunction"
 
-	vm := goja.New()
-	_, err := vm.RunString(myName + "=" + jsFunction)
-	if err != nil {
-		return "", err
-	}
+		//vm := goja.New()
+		_, err := vm.RunString(myName + "=" + jsFunction)
+		if err != nil {
+			return "", err
+		}
 
-	var output func(string) string
-	err = vm.ExportTo(vm.Get(myName), &output)
-	if err != nil {
-		return "", err
-	}
-
-	return output(arg), nil
+		var output func(string) string
+		err = vm.ExportTo(vm.Get(myName), &output)
+		if err != nil {
+			return "", err
+		}
+		ans := output(arg)
+		println("AAAAAAAAAAAA arg=", arg)
+		println("XXXXXXXXXXXX evalJavascript=", ans)
+		return ans, nil
+	*/
 }
 
 func (config playerConfig) getNFunction() (string, error) {
@@ -206,6 +211,7 @@ func (config playerConfig) extraFunction(name string) (string, error) {
 }
 
 func (config playerConfig) decrypt(cyphertext []byte) ([]byte, error) {
+	println("decrypt###########################################################")
 	operations, err := config.parseDecipherOps()
 	if err != nil {
 		return nil, err
