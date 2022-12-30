@@ -11,6 +11,9 @@ github.com/dougwatson/youtube/v2
 # github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db
 ## explicit
 github.com/mitchellh/colorstring
+# github.com/mitchellh/ioprogress v0.0.0-20180201004757-6a23b12fa88e
+## explicit
+github.com/mitchellh/ioprogress
 # golang.org/x/sys v0.3.0
 ## explicit; go 1.17
 golang.org/x/sys/internal/unsafeheader

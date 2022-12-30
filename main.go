@@ -2,14 +2,14 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"io"
 	"log"
 	"mime"
 	"os"
 	"path/filepath"
 	"regexp"
-	"time"
+
+	"github.com/mitchellh/ioprogress"
 
 	"github.com/dougwatson/youtube/v2"
 )
@@ -140,11 +140,20 @@ func (dl *Downloader) videoDLWorker(ctx context.Context, out *os.File, video *yo
 	if err != nil {
 		return err
 	}
-	bar := defaultBytes(
-		size,
-		"downloading",
-	)
-	_, err = io.Copy(io.MultiWriter(out, bar), stream)
+
+	//	bar := defaultBytes(
+	//		-1,
+	//		"downloading",
+	//	)
+
+	// Create the progress reader
+	progressR := &ioprogress.Reader{
+		Reader: stream,
+		Size:   size,
+	}
+
+	//	_, err = io.Copy(io.MultiWriter(out, bar), stream)
+	_, err = io.Copy(out, progressR)
 	if err != nil {
 		return err
 	}
@@ -155,7 +164,7 @@ func (dl *Downloader) videoDLWorker(ctx context.Context, out *os.File, video *yo
 // throughput with recommended defaults.
 // Set maxBytes to -1 to use as a spinner.
 //func defaultBytes(maxBytes int64, description ...string) *ProgressBar {
-
+/*
 func defaultBytes(maxBytes int64, description string) *ProgressBar {
 	// desc := ""
 	desc := description
@@ -178,3 +187,28 @@ func defaultBytes(maxBytes int64, description string) *ProgressBar {
 		OptionSetRenderBlankState(true),
 	)
 }
+*/
+/*
+func defaultBytes(maxBytes int64, description string) *ProgressBar {
+	// desc := ""
+	desc := description
+	//	if len(description) > 0 {
+	//		desc = description[0]
+	//	}
+	return NewOptions64(
+		maxBytes,
+		OptionSetDescription(desc),
+		OptionSetWriter(os.Stderr),
+		OptionShowBytes(true),
+		OptionSetWidth(10),
+		OptionThrottle(65*time.Millisecond),
+		OptionShowCount(),
+		OptionOnCompletion(func() {
+			fmt.Fprint(os.Stderr, "\n")
+		}),
+		OptionSpinnerType(14),
+		OptionFullWidth(),
+		OptionSetRenderBlankState(true),
+	)
+}
+*/
