@@ -154,11 +154,14 @@ func (dl *Downloader) videoDLWorker(ctx context.Context, out *os.File, video *yo
 // DefaultBytes provides a progressbar to measure byte
 // throughput with recommended defaults.
 // Set maxBytes to -1 to use as a spinner.
-func defaultBytes(maxBytes int64, description ...string) *ProgressBar {
-	desc := ""
-	if len(description) > 0 {
-		desc = description[0]
-	}
+//func defaultBytes(maxBytes int64, description ...string) *ProgressBar {
+
+func defaultBytes(maxBytes int64, description string) *ProgressBar {
+	// desc := ""
+	desc := description
+	//	if len(description) > 0 {
+	//		desc = description[0]
+	//	}
 	return NewOptions64(
 		maxBytes,
 		OptionSetDescription(desc),
