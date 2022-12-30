@@ -2,15 +2,16 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"log"
 	"mime"
 	"os"
 	"path/filepath"
 	"regexp"
+	"time"
 
 	"github.com/dougwatson/youtube/v2"
-
 )
 
 const defaultExtension = ".mov"
@@ -148,4 +149,29 @@ func (dl *Downloader) videoDLWorker(ctx context.Context, out *os.File, video *yo
 		return err
 	}
 	return nil
+}
+
+// DefaultBytes provides a progressbar to measure byte
+// throughput with recommended defaults.
+// Set maxBytes to -1 to use as a spinner.
+func defaultBytes(maxBytes int64, description ...string) *ProgressBar {
+	desc := ""
+	if len(description) > 0 {
+		desc = description[0]
+	}
+	return NewOptions64(
+		maxBytes,
+		OptionSetDescription(desc),
+		OptionSetWriter(os.Stderr),
+		OptionShowBytes(true),
+		OptionSetWidth(10),
+		OptionThrottle(65*time.Millisecond),
+		OptionShowCount(),
+		OptionOnCompletion(func() {
+			fmt.Fprint(os.Stderr, "\n")
+		}),
+		OptionSpinnerType(14),
+		OptionFullWidth(),
+		OptionSetRenderBlankState(true),
+	)
 }
