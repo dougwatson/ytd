@@ -10,7 +10,7 @@ import (
 	"regexp"
 
 	"github.com/dougwatson/youtube/v2"
-	"github.com/schollz/progressbar/v3"
+	"github.com/dougwatson/ytd/progressbar"
 )
 
 const defaultExtension = ".mov"
