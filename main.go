@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"log"
 	"mime"
@@ -59,14 +60,25 @@ func (dl *Downloader) logf(format string, v ...interface{}) {
 func main() {
 	ctx := context.Background()
 
-	video, err := testDownloader.Client.GetVideoContext(ctx, "BaW_jenozKc")
+	video, err := testDownloader.Client.GetVideoContext(ctx, "446E-r0rXHI") //youtube.com
 	if err != nil {
 		println("HERE")
 		panic(err)
 	}
-
+	println("main.go main() about to Download ======================================================================")
 	//testDownloader.DownloadComposite(ctx, "", video, "hd1080", "mp4")
-	testDownloader.Download(ctx, video, &video.Formats[0], "")
+	printQuality(video)
+	testDownloader.Download(ctx, video, &video.Formats[27], "")
+	//testDownloader.Download(ctx, video, "hd720", "")
+}
+func printQuality(arr *youtube.Video) {
+
+	for i, val := range arr.Formats {
+		fmt.Printf("quality[%v]=%v\n", i, val.Quality)
+		//if list[i].Quality == quality || list[i].QualityLabel == quality {
+		//      return &list[i]
+		//}
+	}
 }
 
 // Download : Starting download video by arguments.

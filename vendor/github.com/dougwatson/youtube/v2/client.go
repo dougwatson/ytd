@@ -57,6 +57,7 @@ func (c *Client) videoFromID(ctx context.Context, id string) (*Video, error) {
 	// If the uploader has disabled embedding the video on other sites, parse video page
 	if err == ErrNotPlayableInEmbed {
 		// additional parameters are required to access clips with sensitiv content
+		println("client.go videoFromID ==================================================================================================",id)
 		html, err := c.httpGetBodyBytes(ctx, "https://www.youtube.com/watch?v="+id+"&bpctr=9999999999&has_verified=1")
 		if err != nil {
 			return nil, err
@@ -139,7 +140,8 @@ var (
 )
 
 func (c *Client) videoDataByInnertube(ctx context.Context, id string, clientInfo clientInfo) ([]byte, error) {
-	config, err := c.getPlayerConfig(ctx, id)
+     	proxy:="https://proxy.gocoder.io?url="
+     	config, err := c.getPlayerConfig(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -161,8 +163,8 @@ func (c *Client) videoDataByInnertube(ctx context.Context, id string, clientInfo
 			},
 		},
 	}
-
-	return c.httpPostBodyBytes(ctx, "https://www.youtube.com/youtubei/v1/player?key="+clientInfo.key, data)
+	//_=proxy
+	return c.httpPostBodyBytes(ctx, proxy+"https://www.youtube.com/youtubei/v1/player?key="+clientInfo.key, data)
 }
 
 func prepareInnertubeContext(clientInfo clientInfo) inntertubeContext {
