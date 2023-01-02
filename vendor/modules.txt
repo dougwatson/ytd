@@ -3,7 +3,7 @@
 github.com/bitly/go-simplejson
 # github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869
 ## explicit
-# github.com/dougwatson/youtube/v2 v2.7.25
+# github.com/dougwatson/youtube/v2 v2.7.28
 ## explicit; go 1.19
 github.com/dougwatson/youtube/v2
 # github.com/kr/pretty v0.3.1

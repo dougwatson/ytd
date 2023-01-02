@@ -1,7 +1,6 @@
 package youtube
 
 import (
-       "fmt"
 	"sort"
 	"strconv"
 	"strings"
@@ -12,7 +11,6 @@ type FormatList []Format
 // FindByQuality returns the first format matching Quality or QualityLabel
 func (list FormatList) FindByQuality(quality string) *Format {
 	for i := range list {
-	      	 fmt.Printf("format_list.go FindByQuality ===========%v\n",list[i])
 		if list[i].Quality == quality || list[i].QualityLabel == quality {
 			return &list[i]
 		}
