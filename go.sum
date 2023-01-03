@@ -8,6 +8,8 @@ github.com/dlclark/regexp2 v1.7.0 h1:7lJfhqlPssTb1WQx4yvTHN0uElPEv52sbaECrAQxjAo
 github.com/dop251/goja v0.0.0-20221115122301-6c0d9883792e h1:Uo51nR73BJlci20AE5tXT5qiLSGZy5LHnRlKt7VkcUM=
 github.com/dougwatson/youtube/v2 v2.7.28 h1:CUosMjkJfDcLMtUOa5ckrh5dnZxFQuPBSRadlo52suQ=
 github.com/dougwatson/youtube/v2 v2.7.28/go.mod h1:ROTXz79qUzmSuQq4Rmf4JK5t6SyiJJ6XXbpwLvtqfB8=
+github.com/dougwatson/youtube/v2 v2.7.29 h1:OMtI0m/vk9JTj3pXBD8GEz/BveL0CBkfealtoVfSz6w=
+github.com/dougwatson/youtube/v2 v2.7.29/go.mod h1:ROTXz79qUzmSuQq4Rmf4JK5t6SyiJJ6XXbpwLvtqfB8=
 github.com/go-sourcemap/sourcemap v2.1.3+incompatible h1:W1iEw64niKVGogNgBN3ePyLFfuisuzeidWPMPWmECqU=
 github.com/kkdai/youtube/v2 v2.7.18 h1:bVP60bULmCZg5H9GsLLeBx0ONHEsZwdSrzPrVCVWJ1k=
 github.com/kr/pretty v0.3.1 h1:flRD4NNwYAUpkphVc1HcthR4KEIFJ65n8Mw5qdRn3LE=
