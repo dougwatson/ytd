@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -89,15 +90,18 @@ func (dl *Downloader) Download(ctx context.Context, v *youtube.Video, format *yo
 		return err
 	}
 
-	// Create output file
-	out, err := os.Create(destFile)
-	if err != nil {
-		return err
-	}
-	defer out.Close()
+	/*
+		// Create output file
+		out, err := os.Create(destFile)
+		if err != nil {
+			return err
+		}
+		defer out.Close()
+	*/
 
 	dl.logf("Download to file=%s", destFile)
-	return dl.videoDLWorker(ctx, out, v, format)
+	//return dl.videoDLWorker(ctx, out, v, format)
+	return dl.videoDLWorker(ctx, destFile, v, format)
 }
 func (dl *Downloader) getOutputFile(v *youtube.Video, format *youtube.Format, outputFile string) (string, error) {
 	if outputFile == "" {
@@ -147,7 +151,9 @@ func pickIdealFileExtension(mediaType string) string {
 
 	return extensions[0]
 }
-func (dl *Downloader) videoDLWorker(ctx context.Context, out *os.File, video *youtube.Video, format *youtube.Format) error {
+
+// func (dl *Downloader) videoDLWorker(ctx context.Context, out *os.File, video *youtube.Video, format *youtube.Format) error {
+func (dl *Downloader) videoDLWorker(ctx context.Context, destFile string, video *youtube.Video, format *youtube.Format) error {
 	stream, size, err := dl.GetStreamContext(ctx, video, format)
 	if err != nil {
 		return err
@@ -163,9 +169,13 @@ func (dl *Downloader) videoDLWorker(ctx context.Context, out *os.File, video *yo
 		Reader: stream,
 		Size:   size,
 	}
-
-	//	_, err = io.Copy(io.MultiWriter(out, bar), stream)
-	_, err = io.Copy(out, progressR)
+	//write to buffer instead of file
+	var b bytes.Buffer
+	_, err = io.Copy(&b, progressR)
+	if err != nil {
+		return err
+	}
+	err = writeFile(destFile, b.Bytes())
 	if err != nil {
 		return err
 	}
