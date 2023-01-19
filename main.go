@@ -154,7 +154,8 @@ func pickIdealFileExtension(mediaType string) string {
 
 // func (dl *Downloader) videoDLWorker(ctx context.Context, out *os.File, video *youtube.Video, format *youtube.Format) error {
 func (dl *Downloader) videoDLWorker(ctx context.Context, destFile string, video *youtube.Video, format *youtube.Format) error {
-	stream, size, err := dl.GetStreamContext(ctx, video, format)
+     fmt.Printf("format=%#v\n",format)
+     stream, size, err := dl.GetStreamContext(ctx, video, format)
 	if err != nil {
 		return err
 	}
