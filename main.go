@@ -161,30 +161,16 @@ func (dl *Downloader) videoDLWorker(ctx context.Context, destFile string, video 
 	//command line amd64 version
 	//if dl.OutputDir != "" {
 	if runtime.GOARCH == "wasm" {
-		//web browser wasm version
-		if dl.OutputDir != "" {
-			//		if err := os.MkdirAll(dl.OutputDir, 0o755); err != nil {
-			fs, err := GetFS()
-			if err != nil {
-				println("error getting fs=", err)
-			}
-			err = fs.AddDir("dl.OutputDir")
-			if err != nil {
-				println("error making dir=", err)
-			}
-			return err
-		}
+		println("web browser wasm version")
+
 		fs, err := GetFS()
 		if err != nil {
 			println("error getting fs=", err)
 		}
-		//fmt.Printf("b.bytes=%o\n", b.Bytes()[25:35])
-		//fmt.Printf("b.bytes=%c\n", b.Bytes()[25:35])
-		fs.AddFile("home/destFile2.mp4", string(b.Bytes()))
-		//bb, _ := fs.ReadFile("home/destFile2.mp4")
-		//fmt.Printf("     bb=%o\n", bb[25:35])
-		//fmt.Printf("     bb=%c\n", bb[25:35])
+		fs.AddFile("home/destFile2.mp4", b.String())
+
 	} else {
+		println("command line amd64 version")
 		err = os.MkdirAll(dl.OutputDir, 0o755)
 		if err != nil {
 			println("error making dir=", err)
