@@ -8,6 +8,8 @@ import (
 	"log"
 	"mime"
 	"os"
+
+	//"os"
 	"path/filepath"
 	"regexp"
 
@@ -90,15 +92,6 @@ func (dl *Downloader) Download(ctx context.Context, v *youtube.Video, format *yo
 		return err
 	}
 
-	/*
-		// Create output file
-		out, err := os.Create(destFile)
-		if err != nil {
-			return err
-		}
-		defer out.Close()
-	*/
-
 	dl.logf("Download to file=%s", destFile)
 	//return dl.videoDLWorker(ctx, out, v, format)
 	return dl.videoDLWorker(ctx, destFile, v, format)
@@ -140,6 +133,7 @@ func pickIdealFileExtension(mediaType string) string {
 func (dl *Downloader) videoDLWorker(ctx context.Context, destFile string, video *youtube.Video, format *youtube.Format) error {
 	stream, size, err := dl.GetStreamContext(ctx, video, format)
 	if err != nil {
+		println("HERE main.go videoDLWorker 1 err=", err)
 		return err
 	}
 
@@ -155,38 +149,64 @@ func (dl *Downloader) videoDLWorker(ctx context.Context, destFile string, video 
 	}
 	//write to buffer instead of file
 	var b bytes.Buffer
+	fmt.Printf("size: %v progressR=%#v\n", size, progressR)
+
 	i, err := io.Copy(&b, progressR)
 	if err != nil {
-	fmt.Println("XXXXXXXXXX 0 size=",progressR.Size,"err=",err)
-		
-		//return err
+		//print the response Content-Length header
+		fmt.Println("progressR.size=", progressR.Size, "err=", err)
 	}
-	
-	fmt.Println("XXXXXXXXXX 1 i=",i)
+
+	fmt.Println("XXXXXXXXXX 1 i=", i)
 	fmt.Println("XXXXXXXXXX 2")
 	println("XXXXXXXXXX 3")
-//	err = writeFile(destFile, b.Bytes())
-//	err=dfs.AddDir("foo5")
+	println("XXXXXXXXXX 44")
 
-//		if err != nil {
-//		return err
-//	}
-	fs,err:=GetFS()
+	//command line amd64 version
+	//if dl.OutputDir != "" {
+	err = os.MkdirAll(dl.OutputDir, 0o755)
 	if err != nil {
-		println("error getting fs=",err)
+		println("error making dir=", err)
+		return fmt.Errorf("error creating directory: %w", err)
 	}
-	//b,err = fs.ReadFile("home/main2.go")
-	//if err != nil {
-	//	println("error reading home/main2.go=",err)
 	//}
-	//println("INSIDE program b=",b)
-	fmt.Printf("b.bytes=%o\n",b.Bytes()[25:35])
-	fmt.Printf("b.bytes=%c\n",b.Bytes()[25:35])
-	fs.AddFile("home/destFile2.mp4",string(b.Bytes()))
-	bb,_:=fs.ReadFile("home/destFile2.mp4")
-	fmt.Printf("     bb=%o\n",bb[25:35])
-	fmt.Printf("     bb=%c\n",bb[25:35])
-	
+	println("########### 1")
+	println("########### 1")
+	println("########### destFile=", destFile)
+	out, err := os.Create(destFile) // Create output file
+	if err != nil {
+		return fmt.Errorf("error creating file: %w", err)
+	}
+	defer out.Close()
+	_, err = out.Write(b.Bytes())
+	if err != nil {
+		return fmt.Errorf("error writing to file: %w", err)
+	}
+	//web browser wasm version
+	/*
+		if dl.OutputDir != "" {
+			//		if err := os.MkdirAll(dl.OutputDir, 0o755); err != nil {
+			fs, err := GetFS()
+			if err != nil {
+				println("error getting fs=", err)
+			}
+			err = fs.AddDir("dl.OutputDir")
+			if err != nil {
+				println("error making dir=", err)
+			}
+			return "", err
+		}
+		fs, err := GetFS()
+		if err != nil {
+			println("error getting fs=", err)
+		}
+		fmt.Printf("b.bytes=%o\n", b.Bytes()[25:35])
+		fmt.Printf("b.bytes=%c\n", b.Bytes()[25:35])
+		fs.AddFile("home/destFile2.mp4", string(b.Bytes()))
+		bb, _ := fs.ReadFile("home/destFile2.mp4")
+		fmt.Printf("     bb=%o\n", bb[25:35])
+		fmt.Printf("     bb=%c\n", bb[25:35])
+	*/
 	return nil
 }
 func (dl *Downloader) getOutputFile(v *youtube.Video, format *youtube.Format, outputFile string) (string, error) {
@@ -195,20 +215,22 @@ func (dl *Downloader) getOutputFile(v *youtube.Video, format *youtube.Format, ou
 		outputFile += pickIdealFileExtension(format.MimeType)
 	}
 
-	if dl.OutputDir != "" {
-//		if err := os.MkdirAll(dl.OutputDir, 0o755); err != nil {
-		fs,err:=GetFS()
-		if err != nil {
-			println("error getting fs=",err)
-		}
-		err=fs.AddDir("dl.OutputDir")
-		if err != nil {
-			println("error making dir=",err)
-		}
+	/*
+		if dl.OutputDir != "" {
+			//		if err := os.MkdirAll(dl.OutputDir, 0o755); err != nil {
+			fs, err := GetFS()
+			if err != nil {
+				println("error getting fs=", err)
+			}
+			err = fs.AddDir("dl.OutputDir")
+			if err != nil {
+				println("error making dir=", err)
+			}
 			return "", err
 		}
-		outputFile = filepath.Join(dl.OutputDir, outputFile)
- //}
+	*/
+	outputFile = filepath.Join(dl.OutputDir, outputFile)
+	//}
 
 	return outputFile, nil
 }

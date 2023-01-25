@@ -8,8 +8,14 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 )
+
+// var proxy string = "https://proxy.gocoder.io?url="
+//var proxy string = "https://hogar.gocoder.io/"
+
+//var proxy string = ""
 
 // Client offers methods to download video metadata and video streams.
 type Client struct {
@@ -161,8 +167,9 @@ func (c *Client) videoDataByInnertube(ctx context.Context, id string, clientInfo
 			},
 		},
 	}
-	proxy := "https://proxy.gocoder.io?url="
-	return c.httpPostBodyBytes(ctx, proxy+"https://www.youtube.com/youtubei/v1/player?key="+clientInfo.key, data)
+	fmt.Printf("client.go about to fetch video data url=%vhttps://www.youtube.com/youtubei/v1/player?key=%v\n\n", os.Getenv("PROXY"), clientInfo.key)
+	return c.httpPostBodyBytes(ctx, os.Getenv("PROXY")+"https://www.youtube.com/youtubei/v1/player?key="+clientInfo.key, data)
+	//return c.httpPostBodyBytes(ctx, "https://www.youtube.com/youtubei/v1/player?key="+clientInfo.key, data)
 }
 
 func prepareInnertubeContext(clientInfo clientInfo) inntertubeContext {
@@ -219,9 +226,10 @@ func (c *Client) VideoFromPlaylistEntryContext(ctx context.Context, entry *Playl
 }
 
 // GetStream returns the stream and the total size for a specific format
-func (c *Client) GetStream(video *Video, format *Format) (io.ReadCloser, int64, error) {
-	return c.GetStreamContext(context.Background(), video, format)
-}
+//func (c *Client) GetStream(video *Video, format *Format) (io.ReadCloser, int64, error) {
+//	println("client.go: GetStream: video=", video, " format=", format)
+//	return c.GetStreamContext(context.Background(), video, format)
+//}
 
 // GetStreamContext returns the stream and the total size for a specific format with a context.
 func (c *Client) GetStreamContext(ctx context.Context, video *Video, format *Format) (io.ReadCloser, int64, error) {
@@ -229,15 +237,17 @@ func (c *Client) GetStreamContext(ctx context.Context, video *Video, format *For
 	if err != nil {
 		return nil, 0, err
 	}
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	println("client.go: about to do request url=", url, " format=", format.ItagNo)
+	println()
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, os.Getenv("PROXY")+url, nil)
 	if err != nil {
+		println("ERROR: client.go: GetStreamContext: http.NewRequestWithContext failed: ", err.Error())
 		return nil, 0, err
 	}
 
 	r, w := io.Pipe()
 	contentLength := format.ContentLength
-
+	println("client.go: contentLength=", contentLength, format)
 	if contentLength == 0 {
 		// some videos don't have length information
 		contentLength = c.downloadOnce(req, w, format)
@@ -245,6 +255,7 @@ func (c *Client) GetStreamContext(ctx context.Context, video *Video, format *For
 		// we have length information, let's download by chunks!
 		go c.downloadChunked(req, w, format)
 	}
+	println("DONEEEEEE")
 
 	return r, contentLength, nil
 }
