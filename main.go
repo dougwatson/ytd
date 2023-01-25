@@ -8,6 +8,7 @@ import (
 	"log"
 	"mime"
 	"os"
+	"runtime"
 
 	//"os"
 	"path/filepath"
@@ -151,39 +152,16 @@ func (dl *Downloader) videoDLWorker(ctx context.Context, destFile string, video 
 	var b bytes.Buffer
 	fmt.Printf("size: %v progressR=%#v\n", size, progressR)
 
-	i, err := io.Copy(&b, progressR)
+	_, err = io.Copy(&b, progressR)
 	if err != nil {
 		//print the response Content-Length header
 		fmt.Println("progressR.size=", progressR.Size, "err=", err)
 	}
 
-	fmt.Println("XXXXXXXXXX 1 i=", i)
-	fmt.Println("XXXXXXXXXX 2")
-	println("XXXXXXXXXX 3")
-	println("XXXXXXXXXX 44")
-
 	//command line amd64 version
 	//if dl.OutputDir != "" {
-	err = os.MkdirAll(dl.OutputDir, 0o755)
-	if err != nil {
-		println("error making dir=", err)
-		return fmt.Errorf("error creating directory: %w", err)
-	}
-	//}
-	println("########### 1")
-	println("########### 1")
-	println("########### destFile=", destFile)
-	out, err := os.Create(destFile) // Create output file
-	if err != nil {
-		return fmt.Errorf("error creating file: %w", err)
-	}
-	defer out.Close()
-	_, err = out.Write(b.Bytes())
-	if err != nil {
-		return fmt.Errorf("error writing to file: %w", err)
-	}
-	//web browser wasm version
-	/*
+	if runtime.GOARCH == "wasm" {
+		//web browser wasm version
 		if dl.OutputDir != "" {
 			//		if err := os.MkdirAll(dl.OutputDir, 0o755); err != nil {
 			fs, err := GetFS()
@@ -194,19 +172,35 @@ func (dl *Downloader) videoDLWorker(ctx context.Context, destFile string, video 
 			if err != nil {
 				println("error making dir=", err)
 			}
-			return "", err
+			return err
 		}
 		fs, err := GetFS()
 		if err != nil {
 			println("error getting fs=", err)
 		}
-		fmt.Printf("b.bytes=%o\n", b.Bytes()[25:35])
-		fmt.Printf("b.bytes=%c\n", b.Bytes()[25:35])
+		//fmt.Printf("b.bytes=%o\n", b.Bytes()[25:35])
+		//fmt.Printf("b.bytes=%c\n", b.Bytes()[25:35])
 		fs.AddFile("home/destFile2.mp4", string(b.Bytes()))
-		bb, _ := fs.ReadFile("home/destFile2.mp4")
-		fmt.Printf("     bb=%o\n", bb[25:35])
-		fmt.Printf("     bb=%c\n", bb[25:35])
-	*/
+		//bb, _ := fs.ReadFile("home/destFile2.mp4")
+		//fmt.Printf("     bb=%o\n", bb[25:35])
+		//fmt.Printf("     bb=%c\n", bb[25:35])
+	} else {
+		err = os.MkdirAll(dl.OutputDir, 0o755)
+		if err != nil {
+			println("error making dir=", err)
+			return fmt.Errorf("error creating directory: %w", err)
+		}
+
+		out, err := os.Create(destFile) // Create output file
+		if err != nil {
+			return fmt.Errorf("error creating file: %w", err)
+		}
+		defer out.Close()
+		_, err = out.Write(b.Bytes())
+		if err != nil {
+			return fmt.Errorf("error writing to file: %w", err)
+		}
+	}
 	return nil
 }
 func (dl *Downloader) getOutputFile(v *youtube.Video, format *youtube.Format, outputFile string) (string, error) {

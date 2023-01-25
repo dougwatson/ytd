@@ -1,15 +1,22 @@
 package main
 
 import (
-	"os"
+	"testing/fstest"
 )
 
-func writeFile(destFile string, b []byte) error {
-	f, err := os.Create(destFile)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-	_, err = f.Write(b)
-	return err
+type myMapFS struct {
+	fstest.MapFS
+}
+
+func GetFS() (myMapFS, error) {
+	//just an empty stub so that ytd will compile when building for mac architecture
+	return myMapFS{}, nil
+}
+func (m myMapFS) AddFile(name, content string) error {
+	//stub
+	return nil
+}
+func (m myMapFS) AddDir(name string) error {
+	//stub
+	return nil
 }
