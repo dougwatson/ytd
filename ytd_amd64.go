@@ -20,3 +20,6 @@ func (m myMapFS) AddDir(name string) error {
 	//stub
 	return nil
 }
+func runRemote(ptrString string, args []string) {
+	println("runRemote NOOP ptrString=", ptrString, args)
+}

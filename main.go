@@ -132,11 +132,24 @@ func pickIdealFileExtension(mediaType string) string {
 }
 
 func (dl *Downloader) videoDLWorker(ctx context.Context, destFile string, video *youtube.Video, format *youtube.Format) error {
+	url, err := dl.GetStreamURL(video, format)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("videoDLWorker url=%v", url)
 	stream, size, err := dl.GetStreamContext(ctx, video, format)
 	if err != nil {
 		println("HERE main.go videoDLWorker 1 err=", err)
 		return err
 	}
+
+	fmt.Printf("videoDLWorker url=%v\n", url)
+	domEdit:=os.Getenv("DOM")
+	fmt.Printf("os.Getenv(\"DOM\")=%v\n\n",domEdit)
+	//document.querySelector("#outputWindow").style.display = 'none'
+	runRemote(domEdit,[]string{"outputWindow","style","display: none;"})
+	runRemote(domEdit,[]string{"videoPlayer","src",url})
+	//return err
 
 	//	bar := defaultBytes(
 	//		-1,
