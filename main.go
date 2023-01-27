@@ -79,7 +79,9 @@ func main() {
 	println("main.go main() about to Download ======================================================================")
 	//testDownloader.DownloadComposite(ctx, "", video, "hd1080", "mp4")
 	printQuality(video)
-	testDownloader.Download(ctx, video, &video.Formats[27], "")
+	last := len(video.Formats) - 1
+	println("about to download")
+	testDownloader.Download(ctx, video, &video.Formats[last], "")
 	//testDownloader.Download(ctx, video, "hd720", "")
 }
 func printQuality(arr *youtube.Video) {
