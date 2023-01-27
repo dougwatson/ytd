@@ -65,8 +65,12 @@ func main() {
 	ctx := context.Background()
 	videoCode := "KpDd7pQRKHI" //446E-r0rXHI"
 	if len(os.Args) > 0 {
-		videoCode = os.Args[0] //Qwe6qXFTdgc
+		//skip first arg cause it's the program name
+		videoCode = os.Args[1] //Qwe6qXFTdgc
 	}
+	fmt.Printf("videoCode=%v\n\n", videoCode)
+	fmt.Printf("os.Args==%#v\n\n", os.Args)
+
 	video, err := testDownloader.Client.GetVideoContext(ctx, videoCode) //youtube.com
 	if err != nil {
 		println("HERE")
