@@ -63,8 +63,11 @@ func (dl *Downloader) logf(format string, v ...interface{}) {
 
 func main() {
 	ctx := context.Background()
-
-	video, err := testDownloader.Client.GetVideoContext(ctx, "446E-r0rXHI") //youtube.com
+	videoCode := "KpDd7pQRKHI" //446E-r0rXHI"
+	if len(os.Args) > 0 {
+		videoCode = os.Args[0] //Qwe6qXFTdgc
+	}
+	video, err := testDownloader.Client.GetVideoContext(ctx, videoCode) //youtube.com
 	if err != nil {
 		println("HERE")
 		panic(err)
@@ -144,11 +147,11 @@ func (dl *Downloader) videoDLWorker(ctx context.Context, destFile string, video 
 	}
 
 	fmt.Printf("videoDLWorker url=%v\n", url)
-	domEdit:=os.Getenv("DOM")
-	fmt.Printf("os.Getenv(\"DOM\")=%v\n\n",domEdit)
+	domEdit := os.Getenv("DOM")
+	fmt.Printf("os.Getenv(\"DOM\")=%v\n\n", domEdit)
 	//document.querySelector("#outputWindow").style.display = 'none'
-	runRemote(domEdit,[]string{"outputWindow","style","display: none;"})
-	runRemote(domEdit,[]string{"videoPlayer","src",url})
+	runRemote(domEdit, []string{"outputWindow", "style", "display: none;"})
+	runRemote(domEdit, []string{"videoPlayer", "src", url})
 	//return err
 
 	//	bar := defaultBytes(
