@@ -63,7 +63,7 @@ func (dl *Downloader) logf(format string, v ...interface{}) {
 
 func main() {
 	ctx := context.Background()
-	videoCode := "KpDd7pQRKHI" //446E-r0rXHI"
+	videoCode := "446E-r0rXHI" //"KpDd7pQRKHI"
 	if len(os.Args) > 0 {
 		//skip first arg cause it's the program name
 		videoCode = os.Args[1] //Qwe6qXFTdgc
